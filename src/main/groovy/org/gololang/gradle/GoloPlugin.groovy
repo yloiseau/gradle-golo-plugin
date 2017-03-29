@@ -13,6 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+// TODO: doc command
+// TODO: check command
+// TODO: only depend on application plugin if mainModule is defined (we may be creating a golo lib and not an app)
 package org.gololang.gradle
 
 import org.gradle.api.InvalidUserDataException
@@ -76,7 +79,7 @@ class GoloPlugin implements Plugin<Project> {
 			def goloCompile = project.tasks.create(compileTaskName, GoloCompile)
 			javaBasePlugin.configureForSourceSet(sourceSet, goloCompile)
 			goloCompile.dependsOn(sourceSet.compileJavaTaskName)
-			goloCompile.setDescription("Compiles the ${sourceSet.name} Groovy source.")
+			goloCompile.setDescription("Compiles the ${sourceSet.name} Golo source.")
 			goloCompile.setSource(goloSourceSet.golo)
 
 			project.tasks.getByName(sourceSet.classesTaskName).dependsOn(compileTaskName)
