@@ -19,7 +19,7 @@ plugins {
 	id 'groovy'
 	id 'codenarc'
 	id 'maven-publish'
-	id 'com.gradle.plugin-publish' version '0.9.4'
+	id 'com.gradle.plugin-publish' version '0.9.7'
 }
 apply from: 'gradle/idea.gradle'
 
@@ -107,7 +107,6 @@ task integrationTest(type: Test) {
 
 	testClassesDir = sourceSets.integrationTest.output.classesDir
 	classpath = sourceSets.integrationTest.runtimeClasspath
-	testSrcDirs = sourceSets.integrationTest.allJava.srcDirs as List
 
 	mustRunAfter test
 }
@@ -200,5 +199,5 @@ if (ci) {
 }
 
 wrapper {
-	gradleVersion = '2.12'
+	gradleVersion = '3.4'
 }

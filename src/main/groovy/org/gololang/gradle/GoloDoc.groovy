@@ -21,18 +21,16 @@ import org.gradle.api.file.FileCollection
 import org.gradle.api.tasks.SourceTask
 import org.gradle.api.tasks.TaskAction
 
-
 /**
  * @author Yannick Loiseau
  */
-class Golodoc extends SourceTask {
+class GoloDoc extends SourceTask {
 
-	private static final String GOLO_COMPILER_CLASS_NAME = 'org.eclipse.golo.compiler.GoloCompiler'
-	private static final String GOLO_DOCPROCESSOR_CLASS_NAME = 'org.eclipse.golo.doc.HtmlProcessor'
-	public static final String GOLO_CLASSPATH_FIELD = 'goloClasspath'
-	protected static final String COMPILATION_EXCEPTION_CLASS_NAME = 'org.eclipse.golo.compiler.GoloCompilationException'
-	FileCollection goloClasspath
-
+    private static final String GOLO_COMPILER_CLASS_NAME = 'org.eclipse.golo.compiler.GoloCompiler'
+    private static final String GOLO_DOCPROCESSOR_CLASS_NAME = 'org.eclipse.golo.doc.HtmlProcessor'
+    public static final String GOLO_CLASSPATH_FIELD = 'goloClasspath'
+    protected static final String COMPILATION_EXCEPTION_CLASS_NAME = 'org.eclipse.golo.compiler.GoloCompilationException'
+    FileCollection goloClasspath
 
     @TaskAction
     protected void generate() {
@@ -41,12 +39,11 @@ class Golodoc extends SourceTask {
         def units = [:]
         source.files.each { file ->
             try {
-                units.put(file.name, compiler.parse(file.name))
-            } catch (Throwable e) {
+                units.put(file.path, compiler.parse(file.path))
+            } catch (Exception e) {
                 if (e.class.name == COMPILATION_EXCEPTION_CLASS_NAME) {
-                    System.err.println()
-                        def messages = [e.message, e.cause?.message] + e.problems*.description
-                        messages.findAll { it }.each { System.err.println(it) }
+                    def messages = [e.message, e.cause?.message] + e.problems*.description
+                    messages.findAll { it }.each { System.err.println(it) }
                     throw new CompilationFailedException()
                 }
                 throw e
@@ -56,22 +53,19 @@ class Golodoc extends SourceTask {
 
     }
 
-	protected instantiateCompiler() {
-		def goloCompilerClass = loadGoloClass(GOLO_COMPILER_CLASS_NAME)
-		goloCompilerClass.getConstructor().newInstance()
-	}
+    protected instantiateCompiler() {
+        def goloCompilerClass = loadGoloClass(GOLO_COMPILER_CLASS_NAME)
+        goloCompilerClass.getConstructor().newInstance()
+    }
 
     protected instantiateProcessor() {
         def goloHtmlProcessorClass = loadGoloClass(GOLO_DOCPROCESSOR_CLASS_NAME)
         goloHtmlProcessorClass.getConstructor().newInstance()
     }
 
-	protected Class loadGoloClass(String name) {
-		def goloClasspathUrls = getGoloClasspath().files.collect { it.toURI().toURL() } as URL[]
-		def goloClassLoader = URLClassLoader.newInstance(goloClasspathUrls, getClass().classLoader)
-		goloClassLoader.loadClass(name, true)
-	}
-    
-
-
+    protected Class loadGoloClass(String name) {
+        def goloClasspathUrls = getGoloClasspath().files.collect { it.toURI().toURL() } as URL[]
+        def goloClassLoader = URLClassLoader.newInstance(goloClasspathUrls, getClass().classLoader)
+        goloClassLoader.loadClass(name, true)
+    }
 }

@@ -82,6 +82,10 @@ class GoloPlugin implements Plugin<Project> {
 			goloCompile.setDescription("Compiles the ${sourceSet.name} Golo source.")
 			goloCompile.setSource(goloSourceSet.golo)
 
+            def golodoc = project.tasks.create(sourceSet.getCompileTaskName("golodoc"), GoloDoc)
+            golodoc.setDescription("Generates Golodoc API documentation for the ${sourceSet.name} source code") 
+            golodoc.setSource(goloSourceSet.golo)
+
 			project.tasks.getByName(sourceSet.classesTaskName).dependsOn(compileTaskName)
 		}
 	}
@@ -115,6 +119,9 @@ class GoloPlugin implements Plugin<Project> {
 
 		project.tasks.withType(GoloCompile) { GoloCompile goloCompile ->
 			goloCompile.conventionMapping.map(GOLO_CLASSPATH_FIELD) { goloConfiguration }
+		}
+		project.tasks.withType(GoloDoc) { GoloDoc goloDoc ->
+			goloDoc.conventionMapping.map(GOLO_CLASSPATH_FIELD) { goloConfiguration }
 		}
 	}
 
