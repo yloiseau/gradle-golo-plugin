@@ -85,6 +85,7 @@ class GoloPlugin implements Plugin<Project> {
             def golodoc = project.tasks.create(sourceSet.getCompileTaskName("golodoc"), GoloDoc)
             golodoc.setDescription("Generates Golodoc API documentation for the ${sourceSet.name} source code") 
             golodoc.setSource(goloSourceSet.golo)
+            golodoc.setDestinationDir(new File("build/docs/golodoc"))
 
 			project.tasks.getByName(sourceSet.classesTaskName).dependsOn(compileTaskName)
 		}

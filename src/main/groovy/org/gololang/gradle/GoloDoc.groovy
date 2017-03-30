@@ -14,12 +14,14 @@
  * limitations under the License.
  */
 
-package org.gololang.gradle;
+package org.gololang.gradle
 
 import org.gradle.api.internal.tasks.compile.CompilationFailedException
 import org.gradle.api.file.FileCollection
 import org.gradle.api.tasks.SourceTask
 import org.gradle.api.tasks.TaskAction
+
+import java.io.File
 
 /**
  * @author Yannick Loiseau
@@ -31,6 +33,7 @@ class GoloDoc extends SourceTask {
     public static final String GOLO_CLASSPATH_FIELD = 'goloClasspath'
     protected static final String COMPILATION_EXCEPTION_CLASS_NAME = 'org.eclipse.golo.compiler.GoloCompilationException'
     FileCollection goloClasspath
+    File destinationDir
 
     @TaskAction
     protected void generate() {
@@ -49,7 +52,7 @@ class GoloDoc extends SourceTask {
                 throw e
             }
         }
-        processor.process(units, destinationDir)
+        processor.process(units, destinationDir.toPath())
 
     }
 
